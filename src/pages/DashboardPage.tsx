@@ -3,6 +3,7 @@ import { useRelationship } from '../context/RelationshipContext';
 import { DaveCounter } from '../components/DaveCounter';
 import { LoveChart } from '../components/LoveChart';
 import { AnniversaryCountdown } from '../components/AnniversaryCountdown';
+import { MagicBall } from '../components/MagicBall';
 import { motion } from 'framer-motion';
 import { Bell, Heart } from 'lucide-react';
 import confetti from 'canvas-confetti';
@@ -63,6 +64,9 @@ export const Dashboard: React.FC = () => {
 
             <DaveCounter daveDate={daveDate} />
             <LoveChart />
+
+            {/* Magic 8-Ball Feature */}
+            <MagicBall />
 
             <motion.div
                 className="mx-4 mt-2 p-4 bg-white/50 rounded-2xl border border-rose-100 text-center relative overflow-hidden"

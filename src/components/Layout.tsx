@@ -15,6 +15,7 @@ export const Layout: React.FC = () => {
     ];
 
     const currentTabIndex = tabs.findIndex(tab => tab.path === location.pathname);
+    const isMapPage = location.pathname === '/map';
 
     const handleSwipe = (direction: number) => {
         const newIndex = currentTabIndex + direction;
@@ -28,12 +29,14 @@ export const Layout: React.FC = () => {
             {/* Main Content Area with Swipe */}
             <motion.div
                 className="flex-1 overflow-hidden relative"
-                drag="x"
+                drag={isMapPage ? false : "x"}
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={0.2}
                 onDragEnd={(_, info) => {
-                    if (info.offset.x > 100) handleSwipe(-1);
-                    else if (info.offset.x < -100) handleSwipe(1);
+                    if (!isMapPage) {
+                        if (info.offset.x > 100) handleSwipe(-1);
+                        else if (info.offset.x < -100) handleSwipe(1);
+                    }
                 }}
             >
                 <AnimatePresence mode="wait">
