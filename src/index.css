@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Outfit:wght@300;400;500;700&display=swap');
+
+@layer base {
+  body {
+    @apply font-sans overflow-hidden bg-rose-100 text-rose-900;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  /* Force Mobile Container */
+  #root {
+    @apply fixed top-0 left-0 right-0 bottom-0 m-auto w-full max-w-md h-full bg-white shadow-2xl overflow-hidden flex flex-col;
+
+    /* Optional: Simulate phone border on large screens */
+    @media (min-width: 768px) {
+      height: 90vh;
+      max-height: 800px;
+      border-radius: 2rem;
+      margin-top: 5vh;
+    }
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .font-script {
+    font-family: 'Dancing Script', cursive;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/60 backdrop-blur-sm border border-white/50 shadow-sm rounded-xl;
+  }
+}
