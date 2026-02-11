@@ -12,7 +12,7 @@ export interface Idea {
     // Gift specific
     link?: string;
     // Meta
-    createdAt: number;
+    createdAt: string;
 }
 
 export interface RelationshipState {
