@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { useRelationship } from '../context/RelationshipContext';
 import type { Priority, Season } from '../types';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trash2, ExternalLink, MapPin, Gift, Plus, X, Tag, Calendar, Image as ImageIcon, Edit2 } from 'lucide-react';
+import { Trash2, ExternalLink, MapPin, Gift, Plus, X, Tag, Calendar, Image as ImageIcon, Edit2, Film, User } from 'lucide-react';
 
 export const IdeasPage: React.FC = () => {
     const { ideas, addIdea, removeIdea, updateIdea } = useRelationship();
-    const [activeTab, setActiveTab] = useState<'EXPERIENCE' | 'GIFT'>('EXPERIENCE');
+    const [activeTab, setActiveTab] = useState<'EXPERIENCE' | 'GIFT' | 'MOVIE'>('EXPERIENCE');
     const [showForm, setShowForm] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
 
@@ -16,6 +16,7 @@ export const IdeasPage: React.FC = () => {
     const [image, setImage] = useState('');
     const [season, setSeason] = useState<Season>('Any');
     const [link, setLink] = useState('');
+    const [suggestedBy, setSuggestedBy] = useState<'Manolo' | 'Pilar' | 'Ambos'>('Ambos');
 
     const activeIdeas = ideas.filter(i => i.type === activeTab);
 
@@ -28,6 +29,7 @@ export const IdeasPage: React.FC = () => {
             image: image || undefined,
             season: activeTab === 'EXPERIENCE' ? season : undefined,
             link: activeTab === 'GIFT' ? link : undefined,
+            suggestedBy: activeTab === 'MOVIE' ? suggestedBy : undefined,
         };
 
         if (editingId) {
@@ -46,6 +48,7 @@ export const IdeasPage: React.FC = () => {
         setImage('');
         setSeason('Any');
         setLink('');
+        setSuggestedBy('Ambos');
         setEditingId(null);
     };
 
@@ -57,18 +60,24 @@ export const IdeasPage: React.FC = () => {
             {/* Header Tabs */}
             <div className="px-4 pt-6 pb-2">
                 <h1 className="text-3xl font-script text-rose-600 mb-4 px-2">Lista de Deseos</h1>
-                <div className="flex p-1 bg-rose-100/50 rounded-xl">
+                <div className="flex p-1 bg-rose-100/50 rounded-xl space-x-1">
                     <button
                         onClick={() => setActiveTab('EXPERIENCE')}
-                        className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all ${activeTab === 'EXPERIENCE' ? 'bg-white text-rose-600 shadow-sm' : 'text-rose-400'}`}
+                        className={`flex-1 py-2 rounded-lg text-[10px] sm:text-xs font-bold uppercase tracking-wide transition-all ${activeTab === 'EXPERIENCE' ? 'bg-white text-rose-600 shadow-sm' : 'text-rose-400'}`}
                     >
                         Experiencias
                     </button>
                     <button
                         onClick={() => setActiveTab('GIFT')}
-                        className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all ${activeTab === 'GIFT' ? 'bg-white text-rose-600 shadow-sm' : 'text-rose-400'}`}
+                        className={`flex-1 py-2 rounded-lg text-[10px] sm:text-xs font-bold uppercase tracking-wide transition-all ${activeTab === 'GIFT' ? 'bg-white text-rose-600 shadow-sm' : 'text-rose-400'}`}
                     >
                         Regalos
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('MOVIE')}
+                        className={`flex-1 py-2 rounded-lg text-[10px] sm:text-xs font-bold uppercase tracking-wide transition-all ${activeTab === 'MOVIE' ? 'bg-white text-rose-600 shadow-sm' : 'text-rose-400'}`}
+                    >
+                        Películas
                     </button>
                 </div>
             </div>
@@ -89,7 +98,9 @@ export const IdeasPage: React.FC = () => {
                                 {idea.image ? (
                                     <img src={idea.image} className="w-full h-full object-cover" alt="" />
                                 ) : (
-                                    activeTab === 'EXPERIENCE' ? <MapPin className="text-rose-300" size={20} /> : <Gift className="text-rose-300" size={20} />
+                                    activeTab === 'EXPERIENCE' ? <MapPin className="text-rose-300" size={20} /> :
+                                        activeTab === 'GIFT' ? <Gift className="text-rose-300" size={20} /> :
+                                            <Film className="text-rose-300" size={20} />
                                 )}
                             </div>
                             <div className="flex-1 min-w-0">
@@ -103,6 +114,7 @@ export const IdeasPage: React.FC = () => {
                                                 setImage(idea.image || '');
                                                 setSeason(idea.season || 'Any');
                                                 setLink(idea.link || '');
+                                                setSuggestedBy(idea.suggestedBy || 'Ambos');
                                                 setEditingId(idea.id);
                                                 setShowForm(true);
                                             }}
@@ -113,10 +125,11 @@ export const IdeasPage: React.FC = () => {
                                         <button onClick={() => removeIdea(idea.id)} className="text-rose-300 hover:text-rose-500 p-1"><Trash2 size={14} /></button>
                                     </div>
                                 </div>
-                                <div className="flex gap-1 mt-1">
+                                <div className="flex gap-1 mt-1 flex-wrap">
                                     <span className="text-[10px] bg-rose-50 text-rose-600 px-1.5 py-0.5 rounded font-medium">{priorityLabel[idea.priority]}</span>
                                     {idea.season && <span className="text-[10px] bg-green-50 text-green-600 px-1.5 py-0.5 rounded font-medium">{seasonLabel[idea.season]}</span>}
                                     {idea.link && <a href={idea.link} target="_blank" className="text-[10px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded font-medium flex items-center gap-1">Link <ExternalLink size={8} /></a>}
+                                    {idea.suggestedBy && <span className="text-[10px] bg-purple-50 text-purple-600 px-1.5 py-0.5 rounded font-medium flex items-center gap-1"> <User size={8} /> {idea.suggestedBy}</span>}
                                 </div>
                             </div>
                         </motion.div>
@@ -184,6 +197,16 @@ export const IdeasPage: React.FC = () => {
                                             </select>
                                         </div>
                                     )}
+                                    {activeTab === 'MOVIE' && (
+                                        <div className="flex-1 bg-rose-50/50 rounded-xl px-3 py-2 border border-rose-100">
+                                            <label className="text-[10px] uppercase font-bold text-rose-400 flex items-center gap-1"><User size={10} /> Sugerido por</label>
+                                            <select className="w-full bg-transparent outline-none text-rose-900 text-sm" value={suggestedBy} onChange={e => setSuggestedBy(e.target.value as any)}>
+                                                <option value="Ambos">Ambos</option>
+                                                <option value="Manolo">Manolo</option>
+                                                <option value="Pilar">Pilar</option>
+                                            </select>
+                                        </div>
+                                    )}
                                 </div>
 
                                 {activeTab === 'GIFT' && (
@@ -198,7 +221,7 @@ export const IdeasPage: React.FC = () => {
                                 )}
 
                                 <div className="bg-rose-50/50 rounded-xl px-3 py-2 border border-rose-100">
-                                    <label className="text-[10px] uppercase font-bold text-rose-400 flex items-center gap-1"><ImageIcon size={10} /> {activeTab === 'GIFT' ? 'Imagen del Producto (URL)' : 'Foto Lugar (URL)'}</label>
+                                    <label className="text-[10px] uppercase font-bold text-rose-400 flex items-center gap-1"><ImageIcon size={10} /> {activeTab === 'GIFT' ? 'Imagen del Producto (URL)' : activeTab === 'MOVIE' ? 'Portada/Poster (URL)' : 'Foto Lugar (URL)'}</label>
                                     <input type="url" className="w-full bg-transparent outline-none text-rose-900 text-xs truncate"
                                         value={image}
                                         onChange={e => setImage(e.target.value)}

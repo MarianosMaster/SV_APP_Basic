@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, Home, Gift } from 'lucide-react';
+import { Heart, Home, Gift, Globe } from 'lucide-react';
 
 export const Layout: React.FC = () => {
     const location = useLocation();
@@ -10,6 +10,7 @@ export const Layout: React.FC = () => {
     const tabs = [
         { path: '/', icon: Home, label: 'Inicio' },
         { path: '/tree', icon: Heart, label: 'Jardín' },
+        { path: '/map', icon: Globe, label: 'Mundo' },
         { path: '/ideas', icon: Gift, label: 'Deseos' },
     ];
 

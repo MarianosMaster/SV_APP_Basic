@@ -6,6 +6,7 @@ import { Layout } from './components/Layout';
 import { Dashboard } from './pages/DashboardPage';
 import { TreePage } from './pages/TreePage';
 import { IdeasPage } from './pages/IdeasPage';
+import { MapPage } from './pages/MapPage';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
             <Route index element={<Dashboard />} />
             <Route path="tree" element={<TreePage />} />
             <Route path="ideas" element={<IdeasPage />} />
+            <Route path="map" element={<MapPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>
