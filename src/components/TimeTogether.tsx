@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { differenceInDays, differenceInMonths, differenceInYears } from 'date-fns';
+import { differenceInDays, differenceInMonths, differenceInYears, addYears, addMonths } from 'date-fns';
 
 export const TimeTogether: React.FC<{ startDate: string }> = ({ startDate }) => {
     const [time, setTime] = useState({ years: 0, months: 0, days: 0 });
@@ -10,8 +10,12 @@ export const TimeTogether: React.FC<{ startDate: string }> = ({ startDate }) => 
             const now = new Date();
 
             const years = differenceInYears(now, start);
-            const months = differenceInMonths(now, start) % 12;
-            const days = differenceInDays(now, start) % 30;
+            const dateAfterYears = addYears(start, years);
+
+            const months = differenceInMonths(now, dateAfterYears);
+            const dateAfterMonths = addMonths(dateAfterYears, months);
+
+            const days = differenceInDays(now, dateAfterMonths);
 
             setTime({ years, months, days });
         };
