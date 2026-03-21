@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { differenceInDays, differenceInMonths, differenceInYears } from 'date-fns';
+import { intervalToDuration } from 'date-fns';
 import { motion } from 'framer-motion';
 
 export const DaveCounter: React.FC<{ daveDate: string }> = ({ daveDate }) => {
@@ -10,15 +10,17 @@ export const DaveCounter: React.FC<{ daveDate: string }> = ({ daveDate }) => {
             const start = new Date(daveDate);
             const now = new Date();
 
-            const years = differenceInYears(now, start);
-            const months = differenceInMonths(now, start) % 12;
-            const days = differenceInDays(now, start) % 30; // Approx
+            const duration = intervalToDuration({ start, end: now });
 
-            setTime({ years, months, days });
+            setTime({
+                years: duration.years || 0,
+                months: duration.months || 0,
+                days: duration.days || 0
+            });
         };
 
         calculateTime();
-        const timer = setInterval(calculateTime, 1000 * 60 * 60);
+        const timer = setInterval(calculateTime, 1000 * 60);
         return () => clearInterval(timer);
     }, [daveDate]);
 
