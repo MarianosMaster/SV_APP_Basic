@@ -3,6 +3,7 @@ import { useRelationship } from '../context/RelationshipContext';
 import { DaveCounter } from '../components/DaveCounter';
 import { LoveChart } from '../components/LoveChart';
 import { AnniversaryCountdown } from '../components/AnniversaryCountdown';
+import { EventCard } from '../components/EventCard';
 import { MagicBall } from '../components/MagicBall';
 import { motion } from 'framer-motion';
 import { Bell, Heart } from 'lucide-react';
@@ -61,6 +62,20 @@ export const Dashboard: React.FC = () => {
 
             {/* New Anniversary Countdown */}
             <AnniversaryCountdown startDate={startDate} />
+
+            {/* Concert Events */}
+            <EventCard
+                title="Fito & Fitipaldis"
+                date="2026-04-10"
+                location="Cáceres"
+                imageUrl="https://rocksesion.com/wp-content/uploads/2025/11/fito-fitipaldis-el-monte-de-los-aullidos-rocksesion.jpg?w=640"
+            />
+            <EventCard
+                title="Celtas Cortos"
+                date="2026-04-17"
+                location="Valladolid"
+                imageUrl="https://d2cyzdatssrhg7.cloudfront.net/export/sites/default/ets/.content/products/img/00-00089Hc.jpg?__locale=es"
+            />
 
             <DaveCounter daveDate={daveDate} />
             <LoveChart />
