@@ -9,7 +9,7 @@ import { TimeTogether } from '../components/TimeTogether';
 import { MensiversaryProgress } from '../components/MensiversaryProgress';
 import { ExperienceProgress } from '../components/ExperienceProgress';
 import { motion } from 'framer-motion';
-import { Bell, Heart } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 export const Dashboard: React.FC = () => {
