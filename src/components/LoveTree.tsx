@@ -3,9 +3,10 @@ import { motion } from 'framer-motion';
 
 interface LoveTreeProps {
     startDate: string;
+    isWatered?: boolean;
 }
 
-export const LoveTree: React.FC<LoveTreeProps> = ({ startDate }) => {
+export const LoveTree: React.FC<LoveTreeProps> = ({ startDate, isWatered = false }) => {
     // Manual date calculation to be absolutely safe
     const start = new Date(startDate);
     const now = new Date();
@@ -34,7 +35,8 @@ export const LoveTree: React.FC<LoveTreeProps> = ({ startDate }) => {
                 scale: 0.6 + Math.random() * 0.6,
                 rotate: Math.random() * 60 - 30,
                 color: ['#e11d48', '#f43f5e', '#ec4899', '#db2777'][Math.floor(Math.random() * 4)],
-                delay: Math.random() * 1.5
+                delay: Math.random() * 1.5,
+                isFlower: Math.random() > 0.7 // 30% chance to be a flower position if watered
             };
         });
     }, [heartCount]);
@@ -77,18 +79,33 @@ export const LoveTree: React.FC<LoveTreeProps> = ({ startDate }) => {
                 {/* Hearts Grouped */}
                 {hearts.map((heart) => (
                     <g key={heart.id} transform={`translate(${heart.x}, ${heart.y}) rotate(${heart.rotate})`}>
-                        <motion.path
-                            d="M0,2.8 C-0.2,2.8 -3,0 -3,-1.5 C-3,-3 -1.5,-4 0,-2 C1.5,-4 3,-3 3,-1.5 C3,0 0.2,2.8 0,2.8" // More defined heart shape ending at tip
-                            fill={heart.color}
-                            initial={{ scale: 0, opacity: 0 }}
-                            animate={{ scale: heart.scale, opacity: 0.95 }}
-                            transition={{
-                                delay: 1.2 + heart.delay,
-                                duration: 0.6,
-                                type: 'spring',
-                                stiffness: 200
-                            }}
-                        />
+                        {isWatered && heart.isFlower ? (
+                            // Flower shape (yellow center, pink/white petals)
+                            <motion.g
+                                initial={{ scale: 0, opacity: 0 }}
+                                animate={{ scale: heart.scale * 0.7, opacity: 1 }}
+                                transition={{ delay: 1.2 + heart.delay, duration: 0.8, type: 'spring' }}
+                            >
+                                <circle cx="0" cy="-3" r="2.5" fill="#fbcfe8" />
+                                <circle cx="3" cy="0" r="2.5" fill="#fbcfe8" />
+                                <circle cx="0" cy="3" r="2.5" fill="#fbcfe8" />
+                                <circle cx="-3" cy="0" r="2.5" fill="#fbcfe8" />
+                                <circle cx="0" cy="0" r="1.5" fill="#fbbf24" />
+                            </motion.g>
+                        ) : (
+                            <motion.path
+                                d="M0,2.8 C-0.2,2.8 -3,0 -3,-1.5 C-3,-3 -1.5,-4 0,-2 C1.5,-4 3,-3 3,-1.5 C3,0 0.2,2.8 0,2.8"
+                                fill={heart.color}
+                                initial={{ scale: 0, opacity: 0 }}
+                                animate={{ scale: heart.scale, opacity: 0.95 }}
+                                transition={{
+                                    delay: 1.2 + heart.delay,
+                                    duration: 0.6,
+                                    type: 'spring',
+                                    stiffness: 200
+                                }}
+                            />
+                        )}
                     </g>
                 ))}
             </svg>

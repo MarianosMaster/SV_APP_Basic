@@ -6,8 +6,9 @@ export const TimeTogether: React.FC<{ startDate: string }> = ({ startDate }) => 
 
     useEffect(() => {
         const calculateTime = () => {
-            const start = new Date(startDate);
-            const now = new Date();
+            const startOrig = new Date(startDate);
+            const start = new Date(startOrig.getFullYear(), startOrig.getMonth(), startOrig.getDate());
+            const now = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
 
             const years = differenceInYears(now, start);
             const dateAfterYears = addYears(start, years);

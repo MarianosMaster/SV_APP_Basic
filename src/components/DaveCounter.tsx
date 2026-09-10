@@ -8,9 +8,11 @@ export const DaveCounter: React.FC<{ daveDate: string }> = ({ daveDate }) => {
     useEffect(() => {
         const calculateTime = () => {
             const start = new Date(daveDate);
-            const now = new Date();
+            // Asegurar que comparamos solo fechas, ignorando la hora
+            const startDay = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+            const nowDay = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
 
-            const duration = intervalToDuration({ start, end: now });
+            const duration = intervalToDuration({ start: startDay, end: nowDay });
 
             setTime({
                 years: duration.years || 0,
@@ -20,7 +22,7 @@ export const DaveCounter: React.FC<{ daveDate: string }> = ({ daveDate }) => {
         };
 
         calculateTime();
-        const timer = setInterval(calculateTime, 1000 * 60);
+        const timer = setInterval(calculateTime, 1000 * 60 * 60);
         return () => clearInterval(timer);
     }, [daveDate]);
 

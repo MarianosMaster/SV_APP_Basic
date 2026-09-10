@@ -18,6 +18,7 @@ export interface Idea {
     priority: Priority;
     // Experience specific
     season?: Season;
+    date?: string; // ISO date format YYYY-MM-DD
     // Gift specific
     link?: string;
     // Movie specific

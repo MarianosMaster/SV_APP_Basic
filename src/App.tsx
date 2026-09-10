@@ -7,6 +7,8 @@ import { Dashboard } from './pages/DashboardPage';
 import { TreePage } from './pages/TreePage';
 import { IdeasPage } from './pages/IdeasPage';
 import { MapPage } from './pages/MapPage';
+import { SpotifyPage } from './pages/SpotifyPage';
+import { GamePage } from './pages/GamePage';
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
             <Route path="tree" element={<TreePage />} />
             <Route path="ideas" element={<IdeasPage />} />
             <Route path="map" element={<MapPage />} />
+            <Route path="spotify" element={<SpotifyPage />} />
+            <Route path="game" element={<GamePage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>

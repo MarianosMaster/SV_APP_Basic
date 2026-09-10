@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { isPast, addYears, setYear, format } from 'date-fns';
+import { isBefore, isToday, addYears, setYear, format, startOfDay } from 'date-fns';
 import { Sparkles, CalendarHeart } from 'lucide-react';
 
 interface AnniversaryCountdownProps {
@@ -11,6 +11,7 @@ export const AnniversaryCountdown: React.FC<AnniversaryCountdownProps> = ({ star
     const [timeLeft, setTimeLeft] = useState<{ days: number, hours: number, minutes: number }>({ days: 0, hours: 0, minutes: 0 });
     const [nextDate, setNextDate] = useState<Date>(new Date());
     const [progress, setProgress] = useState(0);
+    const [isAnniToday, setIsAnniToday] = useState(false);
 
     useEffect(() => {
         const calculateTime = () => {
@@ -19,24 +20,31 @@ export const AnniversaryCountdown: React.FC<AnniversaryCountdownProps> = ({ star
             const currentYear = now.getFullYear();
 
             let next = setYear(start, currentYear);
-            if (isPast(next)) {
+            
+            // Si el aniversario de este año ya pasó (antes de hoy)
+            if (isBefore(startOfDay(next), startOfDay(now))) {
                 next = addYears(next, 1);
             }
 
             setNextDate(next);
 
-            const totalDiff = next.getTime() - now.getTime();
-            const days = Math.floor(totalDiff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((totalDiff / (1000 * 60 * 60)) % 24);
-            const minutes = Math.floor((totalDiff / 1000 / 60) % 60);
+            const isTodayAnni = isToday(setYear(start, currentYear));
+            setIsAnniToday(isTodayAnni);
 
-            setTimeLeft({ days, hours, minutes });
+            // Calcular días desde el inicio del día para evitar problemas de horas
+            const days = Math.max(0, Math.floor((startOfDay(next).getTime() - startOfDay(now).getTime()) / (1000 * 60 * 60 * 24)));
+            
+            const totalDiff = next.getTime() - now.getTime();
+            const hours = isTodayAnni ? 0 : Math.floor((totalDiff / (1000 * 60 * 60)) % 24);
+            const minutes = isTodayAnni ? 0 : Math.floor((totalDiff / 1000 / 60) % 60);
+
+            setTimeLeft({ days: isTodayAnni ? 0 : days, hours, minutes });
 
             // Calculate progress percentage (assuming a year-long cycle)
             const lastAnniversary = addYears(next, -1);
             const totalYearMillis = next.getTime() - lastAnniversary.getTime();
             const elapsed = now.getTime() - lastAnniversary.getTime();
-            setProgress(Math.min(100, Math.max(0, (elapsed / totalYearMillis) * 100)));
+            setProgress(isTodayAnni ? 100 : Math.min(100, Math.max(0, (elapsed / totalYearMillis) * 100)));
         };
 
         calculateTime();
@@ -102,7 +110,7 @@ export const AnniversaryCountdown: React.FC<AnniversaryCountdownProps> = ({ star
                         <div className="inline-flex items-center gap-2 bg-rose-100/50 px-3 py-1 rounded-full">
                             <CalendarHeart size={12} className="text-rose-500" />
                             <span className="text-xs font-bold text-rose-600">
-                                {format(nextDate, 'dd/MM/yyyy')}
+                                {isAnniToday ? "¡Hoy!" : format(nextDate, 'dd/MM/yyyy')}
                             </span>
                         </div>
                     </div>
@@ -111,11 +119,12 @@ export const AnniversaryCountdown: React.FC<AnniversaryCountdownProps> = ({ star
                 {/* Dynamic Progress Message */}
                 <div className="mt-4 pt-3 border-t border-rose-100/50 text-center">
                     <p className="text-xs text-rose-400 font-medium italic">
-                        {progress < 25 && "¡Acabamos de empezar otra vuelta al sol! 🚀"}
-                        {progress >= 25 && progress < 50 && "¡Un cuarto del camino recorrido! 🍂"}
-                        {progress >= 50 && progress < 75 && "¡Ya queda menos de la mitad! ❤️"}
-                        {progress >= 75 && progress < 90 && "¡La recta final! 😍"}
-                        {progress >= 90 && "¡Casi está aquí! 🎉"}
+                        {isAnniToday && "¡Feliz Aniversario, mi amor! 🎊🎉❤️"}
+                        {!isAnniToday && progress < 25 && "¡Acabamos de empezar otra vuelta al sol! 🚀"}
+                        {!isAnniToday && progress >= 25 && progress < 50 && "¡Un cuarto del camino recorrido! 🍂"}
+                        {!isAnniToday && progress >= 50 && progress < 75 && "¡Ya queda menos de la mitad! ❤️"}
+                        {!isAnniToday && progress >= 75 && progress < 90 && "¡La recta final! 😍"}
+                        {!isAnniToday && progress >= 90 && "¡Casi está aquí! 🎉"}
                     </p>
                 </div>
             </div>

@@ -15,6 +15,7 @@ export const IdeasPage: React.FC = () => {
     const [priority, setPriority] = useState<Priority>('Medium');
     const [image, setImage] = useState('');
     const [season, setSeason] = useState<Season>('Any');
+    const [date, setDate] = useState('');
     const [link, setLink] = useState('');
     const [suggestedBy, setSuggestedBy] = useState<'Manolo' | 'Pilar' | 'Ambos'>('Ambos');
 
@@ -28,6 +29,7 @@ export const IdeasPage: React.FC = () => {
             priority,
             image: image || undefined,
             season: activeTab === 'EXPERIENCE' ? season : undefined,
+            date: activeTab === 'EXPERIENCE' && date ? date : undefined,
             link: activeTab === 'GIFT' ? link : undefined,
             suggestedBy: activeTab === 'MOVIE' ? suggestedBy : undefined,
         };
@@ -47,6 +49,7 @@ export const IdeasPage: React.FC = () => {
         setPriority('Medium');
         setImage('');
         setSeason('Any');
+        setDate('');
         setLink('');
         setSuggestedBy('Ambos');
         setEditingId(null);
@@ -113,6 +116,7 @@ export const IdeasPage: React.FC = () => {
                                                 setPriority(idea.priority);
                                                 setImage(idea.image || '');
                                                 setSeason(idea.season || 'Any');
+                                                setDate(idea.date || '');
                                                 setLink(idea.link || '');
                                                 setSuggestedBy(idea.suggestedBy || 'Ambos');
                                                 setEditingId(idea.id);
@@ -186,16 +190,22 @@ export const IdeasPage: React.FC = () => {
                                         </select>
                                     </div>
                                     {activeTab === 'EXPERIENCE' && (
-                                        <div className="flex-1 bg-rose-50/50 rounded-xl px-3 py-2 border border-rose-100">
-                                            <label className="text-[10px] uppercase font-bold text-rose-400 flex items-center gap-1"><Calendar size={10} /> Estación</label>
-                                            <select className="w-full bg-transparent outline-none text-rose-900 text-sm" value={season} onChange={e => setSeason(e.target.value as Season)}>
-                                                <option value="Any">Cualquiera</option>
-                                                <option value="Spring">Primavera</option>
-                                                <option value="Summer">Verano</option>
-                                                <option value="Autumn">Otoño</option>
-                                                <option value="Winter">Invierno</option>
-                                            </select>
-                                        </div>
+                                        <>
+                                            <div className="flex-1 bg-rose-50/50 rounded-xl px-3 py-2 border border-rose-100">
+                                                <label className="text-[10px] uppercase font-bold text-rose-400 flex items-center gap-1"><Calendar size={10} /> Estación</label>
+                                                <select className="w-full bg-transparent outline-none text-rose-900 text-sm" value={season} onChange={e => setSeason(e.target.value as Season)}>
+                                                    <option value="Any">Cualquiera</option>
+                                                    <option value="Spring">Primavera</option>
+                                                    <option value="Summer">Verano</option>
+                                                    <option value="Autumn">Otoño</option>
+                                                    <option value="Winter">Invierno</option>
+                                                </select>
+                                            </div>
+                                            <div className="flex-1 bg-rose-50/50 rounded-xl px-3 py-2 border border-rose-100">
+                                                <label className="text-[10px] uppercase font-bold text-rose-400 flex items-center gap-1"><Calendar size={10} /> Fecha</label>
+                                                <input type="date" className="w-full bg-transparent outline-none text-rose-900 text-sm" value={date} onChange={e => setDate(e.target.value)} />
+                                            </div>
+                                        </>
                                     )}
                                     {activeTab === 'MOVIE' && (
                                         <div className="flex-1 bg-rose-50/50 rounded-xl px-3 py-2 border border-rose-100">

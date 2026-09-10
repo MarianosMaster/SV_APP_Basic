@@ -5,35 +5,38 @@ import { LoveChart } from '../components/LoveChart';
 import { AnniversaryCountdown } from '../components/AnniversaryCountdown';
 import { EventCard } from '../components/EventCard';
 import { MagicBall } from '../components/MagicBall';
+import { TimeTogether } from '../components/TimeTogether';
+import { MensiversaryProgress } from '../components/MensiversaryProgress';
+import { ExperienceProgress } from '../components/ExperienceProgress';
 import { motion } from 'framer-motion';
 import { Bell, Heart } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 export const Dashboard: React.FC = () => {
-    const { daveDate, startDate } = useRelationship();
+    const { daveDate, startDate, ideas } = useRelationship();
     const [showLove, setShowLove] = useState(false);
 
-    // Dynamic Daily Message Logic
-    const dailyMessage = useMemo(() => {
-        const day = new Date().getDay(); // 0 = Sunday, 1 = Monday, ...
-        const isWeekend = day === 0 || day === 6;
-
-        const weekdayMessages = [
-            "Te quiero 💛", "Te amo 😘", "Te necesito 😭", "Te deseo 🫠",
-            "Tú puedes 💪", "Mucho ánimo 😘", "Eres mi princesa 👑", "Te echo de menos 😭"
+    // Dynamic Daily Reason Logic
+    const dailyReason = useMemo(() => {
+        const reasons = [
+            "Por cómo sonríes cuando te quedas dormida.",
+            "Porque siempre sabes cómo hacerme reír.",
+            "Por tus abrazos que me reinician la vida.",
+            "Porque eres mi lugar seguro en el mundo.",
+            "Por tu forma de ver la vida con tanta luz.",
+            "Porque haces que los días grises tengan color.",
+            "Por la manera en la que me miras.",
+            "Porque contigo todo es más fácil.",
+            "Por tu inteligencia y tu fuerza.",
+            "Porque me haces querer ser mejor persona cada día."
         ];
 
-        const weekendMessages = [
-            "Nos vemos en nada ⏰", "Ya no queda nadaaa 💃"
-        ];
-
-        const list = isWeekend ? weekendMessages : weekdayMessages;
         const seed = new Date().toDateString();
         let hash = 0;
         for (let i = 0; i < seed.length; i++) hash = seed.charCodeAt(i) + ((hash << 5) - hash);
-        const index = Math.abs(hash) % list.length;
+        const index = Math.abs(hash) % reasons.length;
 
-        return list[index];
+        return reasons[index];
     }, []);
 
     const handleSendLove = () => {
@@ -60,8 +63,19 @@ export const Dashboard: React.FC = () => {
                 </motion.div>
             </header>
 
+            {/* Contador de Tiempo Juntos */}
+            <TimeTogether startDate={startDate} />
+
             {/* New Anniversary Countdown */}
             <AnniversaryCountdown startDate={startDate} />
+            
+            {/* Mensiversary Progress */}
+            <MensiversaryProgress startDate={startDate} />
+
+            {/* Experiencias Planeadas */}
+            {ideas.filter(idea => idea.type === 'EXPERIENCE' && idea.date).map(idea => (
+                <ExperienceProgress key={idea.id} experience={idea} />
+            ))}
 
             {/* Concert Events */}
             <EventCard
@@ -84,15 +98,15 @@ export const Dashboard: React.FC = () => {
             <MagicBall />
 
             <motion.div
-                className="mx-4 mt-2 p-4 bg-white/50 rounded-2xl border border-rose-100 text-center relative overflow-hidden"
+                className="mx-4 mt-2 mb-4 p-5 bg-white/50 rounded-2xl border border-pink-100 text-center relative overflow-hidden shadow-sm"
                 whileTap={{ scale: 0.98 }}
             >
-                <div className="absolute top-0 right-0 w-12 h-12 bg-yellow-100 rounded-full blur-xl opacity-50 -mr-6 -mt-6"></div>
-                <p className="font-bold text-rose-800 text-sm mb-1 flex items-center justify-center gap-2 relative z-10">
-                    <Bell size={14} className="text-rose-500 animate-bounce" />
-                    Notificación Diaria
+                <div className="absolute top-0 right-0 w-16 h-16 bg-pink-200 rounded-full blur-2xl opacity-50 -mr-8 -mt-8"></div>
+                <p className="font-bold text-pink-800 mb-2 flex items-center justify-center gap-2 relative z-10 uppercase tracking-widest text-[10px]">
+                    <Heart size={14} className="text-pink-500 fill-pink-500 animate-pulse" />
+                    Razón diaria para quererte
                 </p>
-                <p className="text-xl font-script text-rose-600 animate-pulse relative z-10">"{dailyMessage}"</p>
+                <p className="text-xl font-script text-pink-600 relative z-10 leading-tight">"{dailyReason}"</p>
             </motion.div>
 
             {/* Extra: Interactive Send Love Button */}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, Home, Gift, Globe } from 'lucide-react';
+import { Heart, Home, Gift, Globe, Music, Gamepad2 } from 'lucide-react';
 
 export const Layout: React.FC = () => {
     const location = useLocation();
@@ -12,6 +12,8 @@ export const Layout: React.FC = () => {
         { path: '/tree', icon: Heart, label: 'Jardín' },
         { path: '/map', icon: Globe, label: 'Mundo' },
         { path: '/ideas', icon: Gift, label: 'Deseos' },
+        { path: '/game', icon: Gamepad2, label: 'Juegos' },
+        { path: '/spotify', icon: Music, label: 'Música' },
     ];
 
     const currentTabIndex = tabs.findIndex(tab => tab.path === location.pathname);
